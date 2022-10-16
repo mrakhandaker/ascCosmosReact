@@ -11,7 +11,6 @@ import {
 
 import './App.css';
 import api from './Api';
-import Auth from './Auth';
 
 class App extends Component {
     state = {
@@ -19,7 +18,8 @@ class App extends Component {
         user_location: '',
         user_interests: '',
         all_user_data: [],
-        current_user: Auth.currentUser().emails[0]
+        current_user: AuthenticatorAssertionResponse.currentUser().emails[0]
+        //current_user: 'abc12@gmail.com'
     };
 
     componentDidMount() {
@@ -29,8 +29,7 @@ class App extends Component {
     getUserData () {
         api({
             method: 'get',
-            url: '/GetData?email=' + this.state.current_user,
-            headers: { Authorization: Auth.getToken() }
+            url: '/GetData?email=' + this.state.current_user
         }).then((response) => {
             if(response.data[0])
             {
@@ -53,8 +52,7 @@ class App extends Component {
             data: {
                 location: this.state.user_location,
                 interests: this.state.user_interests
-            },
-            headers: { Authorization: Auth.getToken() }
+            }
         }).then((response) => {
             this.setState({status_message: 'Data about the user saved successfully.'});
         })
@@ -67,8 +65,7 @@ class App extends Component {
     deleteUserData() {
         api({
             method: 'delete',
-            url: '/DeleteData?email=' + this.state.current_user,
-            headers: { Authorization: Auth.getToken() }
+            url: '/DeleteData?email=' + this.state.current_user
         }).then((response) => {
             this.setState({
                 user_location: '',
@@ -84,8 +81,7 @@ class App extends Component {
     getAllUserData () {
         api({
             method: 'get',
-            url: '/GetAllData',
-            headers: { Authorization: Auth.getToken() }
+            url: '/GetAllData'
         }).then((response) => {
             this.setState({
                 all_user_data: response.data,
@@ -143,7 +139,7 @@ class App extends Component {
                         <Button variant="danger" className="buttonGap" onClick={() => this.deleteUserData()} >
                             Delete My Data
                         </Button>
-                        <Button variant="info" onClick={() => Auth.logout()}>
+                        <Button variant="info">
                             Sign Out
                         </Button>
                     </div>

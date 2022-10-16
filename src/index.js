@@ -1,17 +1,20 @@
+// index.js
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import ReactDOM from 'react-dom';
+import authentication from '@kdpw/msal-b2c-react';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+authentication.initialize({
+    instance: 'https://reactb2ctenant.b2clogin.com/tfp/', 
+    tenant: 'reactb2ctenant.onmicrosoft.com',
+    signInPolicy: 'B2C_1_SignUpSignIn',
+    applicationId: 'e9559f78-ec41-4f79-a09e-920b2dbd6011',
+    cacheLocation: 'sessionStorage',
+    scopes: ['profile', 'openid'],
+    redirectUri: 'https://ascsa1.z26.web.core.windows.net/',
+    validateAuthority: false
+});
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+authentication.run(() => {
+    ReactDOM.render(<App />, document.getElementById('root'));
+});
